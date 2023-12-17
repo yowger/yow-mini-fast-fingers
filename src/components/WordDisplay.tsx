@@ -22,7 +22,9 @@ const MemoizedWordDisplay = memo(function WordDisplay({
 
     if (isActive) {
         return (
-            <span className={`activeWord ${!isWordMatch && "unmatched"}`}>
+            <span
+                className={`activeWord ${isWordMatch === false && "unmatched"}`}
+            >
                 {word}
             </span>
         )

@@ -45,11 +45,9 @@ export default function App() {
         const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
 
         if (isTypedWordMatch) {
-            console.log("right")
             setIsWordMatch(true)
         } else {
             setIsWordMatch(false)
-            console.log("wrong")
         }
 
         if (value.endsWith(" ")) {
