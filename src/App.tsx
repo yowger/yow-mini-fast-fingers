@@ -3,18 +3,24 @@ import { useState, useEffect, ChangeEvent } from "react"
 import "./App.css"
 import useFetchWords from "./hooks/useFetchWords"
 import { shuffleWords } from "./utils/shuffleWords"
+import resetIcon from "./assets/icons/reset.svg"
 
 export default function App() {
     const wordsUrl = "assets/data/words.json"
     const fetchedWords = useFetchWords(wordsUrl)
-    const [randomizedWords, setRandomizedWords] = useState<string[]>([])
+    const [words, setWords] = useState<string[]>([])
     const [userInput, setUserInput] = useState("")
 
     useEffect(() => {
         if (fetchedWords && fetchedWords.length > 0) {
-            setRandomizedWords(shuffleWords(fetchedWords))
+            setWords(shuffleWords(fetchedWords))
         }
     }, [fetchedWords])
+
+    function handleGameReset() {
+        console.log("reset")
+        setWords((prevWords) => shuffleWords(prevWords))
+    }
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
@@ -22,16 +28,26 @@ export default function App() {
     }
 
     return (
-        <>
-            <div>
-                <ul>
-                    {randomizedWords.map((word, index) => (
-                        <li key={index}>{word}</li>
+        <div id="root">
+            <div className="container">
+                <div id="wordBox" className="">
+                    {words?.map((word, index) => (
+                        <span key={index}>{word}</span>
                     ))}
-                </ul>
+                </div>
+                <div id="input-row">
+                    <input
+                        type="text"
+                        value={userInput}
+                        onChange={handleUserInput}
+                        className="input"
+                    />
+                    <button className="button" onClick={handleGameReset}>
+                        {/* Reset */}
+                        <img src={resetIcon} />
+                    </button>
+                </div>
             </div>
-            <input type="text" value={userInput} onChange={handleUserInput} />
-            <p>{userInput}</p>
-        </>
+        </div>
     )
 }
