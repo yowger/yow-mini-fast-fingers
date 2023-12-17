@@ -19,8 +19,8 @@ export default function App() {
     }, [fetchedWords])
 
     function handleGameReset() {
-        console.log("reset")
         setWords((prevWords) => shuffleWords(prevWords))
+        setActiveWordIndex(0)
     }
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
