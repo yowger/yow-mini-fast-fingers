@@ -30,6 +30,9 @@ export default function App() {
     return (
         <div id="root">
             <div className="container">
+                <div id="header">
+                    <h1>Fast Fingers</h1>
+                </div>
                 <div id="wordBox" className="">
                     {words?.map((word, index) => (
                         <span key={index}>{word}</span>
