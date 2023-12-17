@@ -4,7 +4,7 @@ import "./App.css"
 import useFetchWords from "./hooks/useFetchWords"
 import { shuffleWords } from "./utils/shuffleWords"
 import resetIcon from "./assets/icons/reset.svg"
-import WordDisplay from "./components/WordDisplay"
+import MemoizedWordDisplay from "./components/WordDisplay"
 
 export type correctWordProps = {
     index: number
@@ -46,8 +46,6 @@ export default function App() {
                 },
             ])
 
-            console.log("correct words: ", correctWords)
-
             setActiveWordIndex((prevIndex) => prevIndex + 1)
             setUserInput("")
 
@@ -68,7 +66,7 @@ export default function App() {
                         const isActive = index === activeWordIndex
 
                         return (
-                            <WordDisplay
+                            <MemoizedWordDisplay
                                 key={index}
                                 index={index}
                                 word={word}

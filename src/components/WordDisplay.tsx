@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { correctWordProps } from "../App"
 
 type WordDisplayProps = {
@@ -7,7 +8,7 @@ type WordDisplayProps = {
     correctWords: correctWordProps[]
 }
 
-export default function WordDisplay({
+const MemoizedWordDisplay = memo(function WordDisplay({
     index,
     word,
     isActive,
@@ -30,4 +31,6 @@ export default function WordDisplay({
     }
 
     return <span>{word}</span>
-}
+})
+
+export default MemoizedWordDisplay
