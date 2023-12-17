@@ -39,6 +39,12 @@
     background-color: var(--grey-2);
     border-radius: 4px;
 }
+#wordBox span.correct {
+    color: var(--success-1);
+}
+#wordBox span.incorrect {
+    color: var(--danger-1);
+}
 
 #input-row {
     display: flex;
