@@ -13,7 +13,7 @@
 #header h1 {
     font-weight: 500;
     letter-spacing: 0.01rem;
-    color: #A9A9A9;
+    color: #a9a9a9;
 }
 
 #wordBox {
@@ -32,7 +32,12 @@
 }
 #wordBox span {
     display: inline-flex;
-    margin-right: 16px;
+    /* margin-right: 16px; */
+    padding-inline: 0.8rem;
+}
+#wordBox span.activeWord {
+    background-color: var(--grey-2);
+    border-radius: 4px;
 }
 
 #input-row {

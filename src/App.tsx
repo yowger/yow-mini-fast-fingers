@@ -10,6 +10,7 @@ export default function App() {
     const fetchedWords = useFetchWords(wordsUrl)
     const [words, setWords] = useState<string[]>([])
     const [userInput, setUserInput] = useState("")
+    const [activeWordIndex, setActiveWordIndex] = useState(0)
 
     useEffect(() => {
         if (fetchedWords && fetchedWords.length > 0) {
@@ -24,7 +25,13 @@ export default function App() {
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
-        setUserInput(value)
+
+        if (value.endsWith(" ")) {
+            setActiveWordIndex((prevIndex) => prevIndex + 1)
+            setUserInput("")
+        } else {
+            setUserInput(value)
+        }
     }
 
     return (
@@ -34,9 +41,16 @@ export default function App() {
                     <h1>Fast Fingers</h1>
                 </div>
                 <div id="wordBox" className="">
-                    {words?.map((word, index) => (
-                        <span key={index}>{word}</span>
-                    ))}
+                    {words?.map((word, index) => {
+                        if (index === activeWordIndex) {
+                            return (
+                                <span className="activeWord" key={index}>
+                                    {word}
+                                </span>
+                            )
+                        }
+                        return <span key={index}>{word}</span>
+                    })}
                 </div>
                 <div id="input-row">
                     <input
