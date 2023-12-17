@@ -5,6 +5,7 @@ type WordDisplayProps = {
     index: number
     word: string
     isActive: boolean
+    isWordMatch: boolean | undefined
     correctWords: correctWordProps[]
 }
 
@@ -12,6 +13,7 @@ const MemoizedWordDisplay = memo(function WordDisplay({
     index,
     word,
     isActive,
+    isWordMatch,
     correctWords,
 }: WordDisplayProps) {
     const isWordCorrect = correctWords.find(
@@ -19,7 +21,11 @@ const MemoizedWordDisplay = memo(function WordDisplay({
     )?.correct
 
     if (isActive) {
-        return <span className="activeWord">{word}</span>
+        return (
+            <span className={`activeWord ${!isWordMatch && "unmatched"}`}>
+                {word}
+            </span>
+        )
     }
 
     if (isWordCorrect === true) {

@@ -17,6 +17,9 @@ export default function App() {
     const [words, setWords] = useState<string[]>([])
     const [userInput, setUserInput] = useState("")
     const [activeWordIndex, setActiveWordIndex] = useState(0)
+    const [isWordMatch, setIsWordMatch] = useState<boolean | undefined>(
+        undefined
+    )
     const [correctWords, setCorrectWords] = useState<correctWordProps[]>([])
 
     useEffect(() => {
@@ -33,14 +36,23 @@ export default function App() {
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
-        const isEmpty = value.trim() === ""
+        const isEmpty = value === " "
 
         if (isEmpty) return
 
-        if (value.endsWith(" ")) {
-            const enteredWord = value.trim()
-            const currentActiveWord = words[activeWordIndex]
+        const enteredWord = value.trim()
+        const currentActiveWord = words[activeWordIndex]
+        const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
 
+        if (isTypedWordMatch) {
+            console.log("right")
+            setIsWordMatch(true)
+        } else {
+            setIsWordMatch(false)
+            console.log("wrong")
+        }
+
+        if (value.endsWith(" ")) {
             setCorrectWords((prevCorrectWords) => [
                 ...prevCorrectWords,
                 {
@@ -51,8 +63,6 @@ export default function App() {
 
             setActiveWordIndex((prevIndex) => prevIndex + 1)
             setUserInput("")
-
-            console.log("")
         } else {
             setUserInput(value)
         }
@@ -74,6 +84,7 @@ export default function App() {
                                 index={index}
                                 word={word}
                                 isActive={isActive}
+                                isWordMatch={isWordMatch}
                                 correctWords={correctWords}
                             />
                         )

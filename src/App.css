@@ -39,6 +39,9 @@
     background-color: var(--grey-2);
     border-radius: 4px;
 }
+#wordBox span.unmatched {
+    background-color: var(--danger-1);
+}
 #wordBox span.correct {
     color: var(--success-1);
 }
