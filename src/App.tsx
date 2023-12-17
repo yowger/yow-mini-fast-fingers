@@ -33,6 +33,9 @@ export default function App() {
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
+        const isEmpty = value.trim() === ""
+
+        if (isEmpty) return
 
         if (value.endsWith(" ")) {
             const enteredWord = value.trim()
