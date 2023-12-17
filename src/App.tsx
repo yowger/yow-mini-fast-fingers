@@ -43,8 +43,9 @@ export default function App() {
                         className="input"
                     />
                     <button className="button" onClick={handleGameReset}>
-                        {/* Reset */}
-                        <img src={resetIcon} />
+                        <div className="button-icon">
+                            <img src={resetIcon} />
+                        </div>
                     </button>
                 </div>
             </div>

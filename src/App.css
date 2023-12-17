@@ -28,44 +28,6 @@
 #input-row {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.container {
-    max-width: 768px;
-}
-
-.input {
-    background-color: var(--primary);
-    color: var(--text-primary);
-    border-radius: 4px;
-    height: 3.4rem;
-    padding-inline: 1.75rem;
-    outline: 2px solid var(--grey-1);
-    transition: outline 0.25s ease-in-out;
-}
-.input:focus {
-    outline: 2px solid var(--blue-1);
-}
-
-.button {
-    background-color: var(--primary);
-    color: var(--text-primary);
-    border-radius: 4px;
-    height: 3.4rem;
-    padding-inline: 1.75rem;
-    transition: background-color 0.25s ease-in-out;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.button:hover {
-    background-color: var(--blue-1);
-}
-.button:focus {
-    outline: none;
-}
-.button:active {
-    background-color: var(--blue-2);
+    gap: 1.15rem;
+    margin-top: 1.15rem;
 }
