@@ -8,82 +8,95 @@ import "./App.css"
 import Timer from "./components/Timer"
 import GameSettings from "./components/GameSettings"
 
-export type correctWordProps = {
+export type CorrectWordProps = {
     index: number
     correct: boolean
 }
 
 export default function App() {
+    const defaultTime = 60
     const wordsUrl = "assets/data/words.json"
     const fetchedWords = useFetchWords(wordsUrl)
-    const [words, setWords] = useState<string[]>([])
-    const [userInput, setUserInput] = useState("")
-    const [activeWordIndex, setActiveWordIndex] = useState(0)
-    const [isWordMatch, setIsWordMatch] = useState<boolean | undefined>(
-        undefined
-    )
-    const [correctWords, setCorrectWords] = useState<correctWordProps[]>([])
-    const [duration, setDuration] = useState(60)
-    const [timer, setTimer] = useState(duration)
-    const [startTimer, setStartTimer] = useState(false)
-    const [isGameEnd, setIsGameEnd] = useState(false)
     const inputRef = useRef<HTMLInputElement | null>(null)
+
+    const [gameState, setGameState] = useState({
+        words: [] as string[],
+        userInput: "",
+        activeWordIndex: 0,
+        isWordMatch: undefined as boolean | undefined,
+        correctWords: [] as CorrectWordProps[],
+        duration: defaultTime,
+        timer: defaultTime,
+        startTimer: false,
+        isGameEnd: false,
+    })
 
     useEffect(() => {
         if (fetchedWords && fetchedWords.length > 0) {
-            setWords(shuffleWords(fetchedWords))
+            setGameState((prevState) => ({
+                ...prevState,
+                words: shuffleWords(fetchedWords),
+            }))
         }
     }, [fetchedWords])
 
     useEffect(() => {
-        if (startTimer && timer > 0) {
+        if (gameState.startTimer && gameState.timer > 0) {
             const interval = setInterval(() => {
-                setTimer((prevTimer) => prevTimer - 1)
+                setGameState((prevState) => ({
+                    ...prevState,
+                    timer: prevState.timer - 1,
+                }))
             }, 1000)
 
             return () => clearInterval(interval)
-        } else if (timer === 0) {
+        } else if (gameState.timer === 0) {
             handleGameEnd()
         }
-    }, [startTimer, timer])
+    }, [gameState.startTimer, gameState.timer])
+
+    useEffect(() => {
+        handleGameReset()
+    }, [gameState.duration])
 
     function handleGameReset() {
-        setWords((prevWords) => shuffleWords(prevWords))
-        setActiveWordIndex(0)
-        setCorrectWords([])
-        setIsWordMatch(undefined)
-
-        setUserInput("")
+        setGameState((prevState) => ({
+            ...prevState,
+            words: shuffleWords(prevState.words),
+            activeWordIndex: 0,
+            correctWords: [],
+            isWordMatch: undefined,
+            userInput: "",
+            timer: prevState.duration,
+            startTimer: false,
+            isGameEnd: false,
+        }))
         inputRef?.current?.focus()
-
-        setTimer(duration)
-        setStartTimer(false)
-
-        setIsGameEnd(false)
     }
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
 
-        setIsGameEnd(false)
-        setStartTimer(true)
+        setGameState((prevState) => ({
+            ...prevState,
+            isGameEnd: false,
+            startTimer: true,
+            userInput: value === " " ? "" : value,
+        }))
 
         if (value === " ") return
 
         const enteredWord = value.trim()
-        const currentActiveWord = words[activeWordIndex]
+        const currentActiveWord = gameState.words[gameState.activeWordIndex]
         const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
 
-        if (isTypedWordMatch) {
-            setIsWordMatch(true)
-        } else {
-            setIsWordMatch(false)
-        }
+        setGameState((prevState) => ({
+            ...prevState,
+            isWordMatch: isTypedWordMatch,
+        }))
 
         if (value.endsWith(" ")) {
             handleWordCompletion(enteredWord, currentActiveWord)
-        } else {
-            setUserInput(value)
         }
     }
 
@@ -91,42 +104,131 @@ export default function App() {
         enteredWord: string,
         currentActiveWord: string
     ) {
-        setCorrectWords((prevCorrectWords) => [
-            ...prevCorrectWords,
-            {
-                index: activeWordIndex,
-                correct: enteredWord === currentActiveWord,
-            },
-        ])
-
-        setActiveWordIndex((prevIndex) => prevIndex + 1)
-        setUserInput("")
+        setGameState((prevState) => ({
+            ...prevState,
+            correctWords: [
+                ...prevState.correctWords,
+                {
+                    index: prevState.activeWordIndex,
+                    correct: enteredWord === currentActiveWord,
+                },
+            ],
+            activeWordIndex: prevState.activeWordIndex + 1,
+            userInput: "",
+        }))
     }
 
     function handleGameDuration() {
-        const newDuration = duration === 60 ? 30 : 60
-        console.log(
-            "🚀 ~ file: App.tsx:107 ~ handleGameDuration ~ changeDuration:",
-            newDuration
-        )
-
-        setDuration(newDuration)
-        setTimer(newDuration)
-        // handleGameReset()
+        const newDuration = gameState.duration === 60 ? 30 : 60
+        setGameState((prevState) => ({
+            ...prevState,
+            duration: newDuration,
+        }))
     }
 
     function handleGameEnd() {
-        setIsGameEnd(true)
+        setGameState((prevState) => ({
+            ...prevState,
+            isGameEnd: true,
+        }))
 
-        const correctWordCount = correctWords.filter(
+        const correctWordCount = gameState.correctWords.filter(
             (word) => word.correct
         ).length
-        const incorrectWords = correctWords.filter((word) => !word.correct)
-
+        console.log(
+            "🚀 ~ file: App.tsx:138 ~ handleGameEnd ~ correctWordCount:",
+            correctWordCount
+        )
+        const InCorrectWordCount = gameState.correctWords.filter(
+            (word) => !word.correct
+        ).length
+        console.log(
+            "🚀 ~ file: App.tsx:141 ~ handleGameEnd ~ InCorrectWordCount:",
+            InCorrectWordCount
+        )
         const wordsPerMinute = Math.round(
-            (correctWordCount * 60) / (60 - timer)
+            (correctWordCount * 60) / (60 - gameState.timer)
+        )
+        console.log(
+            "🚀 ~ file: App.tsx:145 ~ handleGameEnd ~ wordsPerMinute:",
+            wordsPerMinute
         )
     }
+
+    // function handleGameEnd() {
+    //     setIsGameEnd(true)
+
+    //     const correctWordCount = correctWords.filter(
+    //         (word) => word.correct
+    //     ).length
+    //     const incorrectWords = correctWords.filter((word) => !word.correct)
+
+    //     const wordsPerMinute = Math.round(
+    //         (correctWordCount * 60) / (60 - timer)
+    //     )
+    // }
+
+    // function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
+    //     const value = event.target.value
+
+    //     setIsGameEnd(false)
+    //     setStartTimer(true)
+
+    //     if (value === " ") return
+
+    //     const enteredWord = value.trim()
+    //     const currentActiveWord = words[activeWordIndex]
+    //     const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
+
+    //     if (isTypedWordMatch) {
+    //         setIsWordMatch(true)
+    //     } else {
+    //         setIsWordMatch(false)
+    //     }
+
+    //     if (value.endsWith(" ")) {
+    //         handleWordCompletion(enteredWord, currentActiveWord)
+    //     } else {
+    //         setUserInput(value)
+    //     }
+    // }
+
+    // function handleWordCompletion(
+    //     enteredWord: string,
+    //     currentActiveWord: string
+    // ) {
+    //     setCorrectWords((prevCorrectWords) => [
+    //         ...prevCorrectWords,
+    //         {
+    //             index: activeWordIndex,
+    //             correct: enteredWord === currentActiveWord,
+    //         },
+    //     ])
+
+    //     setActiveWordIndex((prevIndex) => prevIndex + 1)
+    //     setUserInput("")
+    // }
+
+    // function handleGameReset() {
+    //     setWords((prevWords) => shuffleWords(prevWords))
+    //     setActiveWordIndex(0)
+    //     setCorrectWords([])
+    //     setIsWordMatch(undefined)
+
+    //     setUserInput("")
+    //     inputRef?.current?.focus()
+
+    //     setTimer(duration)
+    //     setStartTimer(false)
+
+    //     setIsGameEnd(false)
+    // }
+
+    // function handleGameDuration() {
+    //     const newDuration = duration === 60 ? 30 : 60
+
+    //     setDuration(newDuration)
+    // }
 
     return (
         <div id="root">
@@ -135,25 +237,25 @@ export default function App() {
                     <h1>Fast Fingers</h1>
                 </div>
                 <GameSettings
-                    duration={duration}
+                    duration={gameState.duration}
                     onChangeGameDuration={handleGameDuration}
                 />
                 <WordBox
-                    words={words}
-                    activeWordIndex={activeWordIndex}
-                    isWordMatch={isWordMatch}
-                    correctWords={correctWords}
+                    words={gameState.words}
+                    activeWordIndex={gameState.activeWordIndex}
+                    isWordMatch={gameState.isWordMatch}
+                    correctWords={gameState.correctWords}
                 />
                 <div id="input-row">
                     <input
                         type="text"
-                        value={userInput}
+                        value={gameState.userInput}
                         onChange={handleUserInput}
                         className="input"
                         ref={inputRef}
-                        disabled={isGameEnd}
+                        disabled={gameState.isGameEnd}
                     />
-                    <Timer time={timer} />
+                    <Timer time={gameState.timer} />
                     <button className="button" onClick={handleGameReset}>
                         <div className="button-icon">
                             <img src={resetIcon} />

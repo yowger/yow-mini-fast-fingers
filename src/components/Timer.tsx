@@ -1,7 +1,7 @@
+import formatTime from "../utils/formatTime"
+
 export default function Timer({ time }: { time: number }) {
-    const formattedTime = `${Math.floor(time / 60)
-        .toString()
-        .padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`
+    const formattedTime = formatTime(time)
 
     return (
         <div id="timer">
