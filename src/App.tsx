@@ -13,19 +13,6 @@ export type CorrectWordProps = {
     correct: boolean
 }
 
-function debounce(func, delay) {
-    let timeoutId
-
-    return function (...args) {
-        const context = this
-
-        clearTimeout(timeoutId)
-        timeoutId = setTimeout(() => {
-            func.apply(context, args)
-        }, delay)
-    }
-}
-
 export default function App() {
     const defaultTime = 60
     const wordsUrl = "assets/data/words.json"
@@ -94,26 +81,6 @@ export default function App() {
             }
         }
     }, [gameState.activeWordIndex, gameState.endOfRowIndices])
-
-    useEffect(() => {
-        function handleResize() {
-            console.log("🚀 ~ file: App.tsx:101 ~ handleResize ~ gameState.startTimer:", gameState.startTimer)
-            if (gameState.startTimer === true) {
-                console.log("nice")
-                handleGameReset()
-            }else {
-                console.log("not nice")
-            }
-        }
-
-        const debouncedResize = debounce(handleResize, 300)
-
-        window.addEventListener("resize", debouncedResize)
-
-        return () => {
-            window.removeEventListener("resize", debouncedResize)
-        }
-    }, [gameState.startTimer])
 
     function handleGameReset() {
         setGameState((prevState) => ({
