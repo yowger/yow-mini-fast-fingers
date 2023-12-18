@@ -2,11 +2,11 @@ import { useState, useEffect, ChangeEvent, useRef } from "react"
 
 import useFetchWords from "./hooks/useFetchWords"
 import { shuffleWords } from "./utils/shuffleWords"
-import WordBox from "./components/WordBox"
 import resetIcon from "./assets/icons/reset.svg"
 import "./App.css"
 import Timer from "./components/Timer"
 import GameSettings from "./components/GameSettings"
+import MemoizedWordBox from "./components/WordBox"
 
 export type CorrectWordProps = {
     index: number
@@ -164,7 +164,7 @@ export default function App() {
                     duration={gameState.duration}
                     onChangeGameDuration={handleGameDuration}
                 />
-                <WordBox
+                <MemoizedWordBox
                     words={gameState.words}
                     activeWordIndex={gameState.activeWordIndex}
                     isWordMatch={gameState.isWordMatch}
