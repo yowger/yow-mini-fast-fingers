@@ -58,8 +58,8 @@ body {
     background-color: var(--blue-2);
 }
 .button .button-icon {
-    transition: transform 0.65s ease-in-out;
+    transition: transform 0.35s ease-in-out;
 }
 .button:hover .button-icon {
-    transform: rotate(270deg);
+    transform: rotate(90deg);
 }

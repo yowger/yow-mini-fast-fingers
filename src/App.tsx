@@ -1,10 +1,10 @@
 import { useState, useEffect, ChangeEvent } from "react"
 
-import "./App.css"
 import useFetchWords from "./hooks/useFetchWords"
 import { shuffleWords } from "./utils/shuffleWords"
+import WordBox from "./components/WordBox"
 import resetIcon from "./assets/icons/reset.svg"
-import MemoizedWordDisplay from "./components/WordDisplay"
+import "./App.css"
 
 export type correctWordProps = {
     index: number
@@ -36,9 +36,8 @@ export default function App() {
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
-        const isEmpty = value === " "
 
-        if (isEmpty) return
+        if (value === " ") return
 
         const enteredWord = value.trim()
         const currentActiveWord = words[activeWordIndex]
@@ -51,19 +50,26 @@ export default function App() {
         }
 
         if (value.endsWith(" ")) {
-            setCorrectWords((prevCorrectWords) => [
-                ...prevCorrectWords,
-                {
-                    index: activeWordIndex,
-                    correct: enteredWord === currentActiveWord,
-                },
-            ])
-
-            setActiveWordIndex((prevIndex) => prevIndex + 1)
-            setUserInput("")
+            handleWordCompletion(enteredWord, currentActiveWord)
         } else {
             setUserInput(value)
         }
+    }
+
+    function handleWordCompletion(
+        enteredWord: string,
+        currentActiveWord: string
+    ) {
+        setCorrectWords((prevCorrectWords) => [
+            ...prevCorrectWords,
+            {
+                index: activeWordIndex,
+                correct: enteredWord === currentActiveWord,
+            },
+        ])
+
+        setActiveWordIndex((prevIndex) => prevIndex + 1)
+        setUserInput("")
     }
 
     return (
@@ -72,22 +78,12 @@ export default function App() {
                 <div id="header">
                     <h1>Fast Fingers</h1>
                 </div>
-                <div id="wordBox" className="">
-                    {words?.map((word, index) => {
-                        const isActive = index === activeWordIndex
-
-                        return (
-                            <MemoizedWordDisplay
-                                key={index}
-                                index={index}
-                                word={word}
-                                isActive={isActive}
-                                isWordMatch={isWordMatch}
-                                correctWords={correctWords}
-                            />
-                        )
-                    })}
-                </div>
+                <WordBox
+                    words={words}
+                    activeWordIndex={activeWordIndex}
+                    isWordMatch={isWordMatch}
+                    correctWords={correctWords}
+                />
                 <div id="input-row">
                     <input
                         type="text"
