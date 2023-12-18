@@ -16,8 +16,15 @@
     color: #a9a9a9;
 }
 
-#wordBox {
+#game-settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 2rem;
+}
+
+#wordBox {
+    margin-top: 3.75rem;
     overflow: hidden;
     height: 115px;
     border: 4px;
@@ -47,6 +54,19 @@
 }
 #wordBox span.incorrect {
     color: var(--danger-1);
+}
+
+#timer {
+    height: 3.4rem;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: 1.75rem;
+    width: 7.125rem;
+}
+#timer span {
+    font-size: 1.375rem;
 }
 
 #input-row {

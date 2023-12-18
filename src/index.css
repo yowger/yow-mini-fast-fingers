@@ -20,7 +20,8 @@ body {
 }
 
 .container {
-    max-width: 768px;
+    max-width: 960px;
+    margin-inline: 2rem;
 }
 
 .input {
@@ -46,6 +47,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.button-sm {
+    height: 2.9rem;
+    padding-inline: 1.5rem;
+    font-size: 1.125rem;
+    font-size: 1rem;
 }
 .button:hover {
     cursor: pointer;

@@ -1,10 +1,12 @@
-import { useState, useEffect, ChangeEvent } from "react"
+import { useState, useEffect, ChangeEvent, useRef } from "react"
 
 import useFetchWords from "./hooks/useFetchWords"
 import { shuffleWords } from "./utils/shuffleWords"
 import WordBox from "./components/WordBox"
 import resetIcon from "./assets/icons/reset.svg"
 import "./App.css"
+import Timer from "./components/Timer"
+import GameSettings from "./components/GameSettings"
 
 export type correctWordProps = {
     index: number
@@ -21,6 +23,11 @@ export default function App() {
         undefined
     )
     const [correctWords, setCorrectWords] = useState<correctWordProps[]>([])
+    const [duration, setDuration] = useState(60)
+    const [timer, setTimer] = useState(duration)
+    const [startTimer, setStartTimer] = useState(false)
+    const [isGameEnd, setIsGameEnd] = useState(false)
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
     useEffect(() => {
         if (fetchedWords && fetchedWords.length > 0) {
@@ -28,14 +35,38 @@ export default function App() {
         }
     }, [fetchedWords])
 
+    useEffect(() => {
+        if (startTimer && timer > 0) {
+            const interval = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1)
+            }, 1000)
+
+            return () => clearInterval(interval)
+        } else if (timer === 0) {
+            handleGameEnd()
+        }
+    }, [startTimer, timer])
+
     function handleGameReset() {
         setWords((prevWords) => shuffleWords(prevWords))
         setActiveWordIndex(0)
         setCorrectWords([])
+        setIsWordMatch(undefined)
+
+        setUserInput("")
+        inputRef?.current?.focus()
+
+        setTimer(duration)
+        setStartTimer(false)
+
+        setIsGameEnd(false)
     }
 
     function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
         const value = event.target.value
+
+        setIsGameEnd(false)
+        setStartTimer(true)
 
         if (value === " ") return
 
@@ -72,12 +103,41 @@ export default function App() {
         setUserInput("")
     }
 
+    function handleGameDuration() {
+        const newDuration = duration === 60 ? 30 : 60
+        console.log(
+            "🚀 ~ file: App.tsx:107 ~ handleGameDuration ~ changeDuration:",
+            newDuration
+        )
+
+        setDuration(newDuration)
+        setTimer(newDuration)
+        // handleGameReset()
+    }
+
+    function handleGameEnd() {
+        setIsGameEnd(true)
+
+        const correctWordCount = correctWords.filter(
+            (word) => word.correct
+        ).length
+        const incorrectWords = correctWords.filter((word) => !word.correct)
+
+        const wordsPerMinute = Math.round(
+            (correctWordCount * 60) / (60 - timer)
+        )
+    }
+
     return (
         <div id="root">
             <div className="container">
                 <div id="header">
                     <h1>Fast Fingers</h1>
                 </div>
+                <GameSettings
+                    duration={duration}
+                    onChangeGameDuration={handleGameDuration}
+                />
                 <WordBox
                     words={words}
                     activeWordIndex={activeWordIndex}
@@ -90,7 +150,10 @@ export default function App() {
                         value={userInput}
                         onChange={handleUserInput}
                         className="input"
+                        ref={inputRef}
+                        disabled={isGameEnd}
                     />
+                    <Timer time={timer} />
                     <button className="button" onClick={handleGameReset}>
                         <div className="button-icon">
                             <img src={resetIcon} />
