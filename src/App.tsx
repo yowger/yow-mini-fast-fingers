@@ -6,7 +6,7 @@ import resetIcon from "./assets/icons/reset.svg"
 import "./App.css"
 import Timer from "./components/Timer"
 import GameSettings from "./components/GameSettings"
-import MemoizedWordBox from "./components/WordBox"
+import MemoizedWordBox, { type WordBoxRefProps } from "./components/WordBox"
 
 export type CorrectWordProps = {
     index: number
@@ -18,6 +18,7 @@ export default function App() {
     const wordsUrl = "assets/data/words.json"
     const fetchedWords = useFetchWords(wordsUrl)
     const inputRef = useRef<HTMLInputElement | null>(null)
+    const containerRef = useRef<WordBoxRefProps>(null)
 
     const [gameState, setGameState] = useState({
         words: [] as string[],
@@ -29,6 +30,7 @@ export default function App() {
         timer: defaultTime,
         startTimer: false,
         isGameEnd: false,
+        endOfRowIndices: [] as number[],
     })
 
     useEffect(() => {
@@ -53,11 +55,30 @@ export default function App() {
         } else if (gameState.timer === 0) {
             handleGameEnd()
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameState.startTimer, gameState.timer])
 
     useEffect(() => {
         handleGameReset()
     }, [gameState.duration])
+
+    useEffect(() => {
+        if (gameState.endOfRowIndices.includes(gameState.activeWordIndex - 1)) {
+            const containerRowNode = containerRef?.current?.getContainerRowRef()
+            if (containerRowNode) {
+                const endOfRowIndex =
+                    gameState.endOfRowIndices.indexOf(
+                        gameState.activeWordIndex - 1
+                    ) + 1
+
+                const rowHeight = 55
+
+                const topPosition = `${-rowHeight * endOfRowIndex}px`
+                containerRowNode.style.top = topPosition
+            }
+        }
+    }, [gameState.activeWordIndex, gameState.endOfRowIndices])
 
     function handleGameReset() {
         setGameState((prevState) => ({
@@ -131,6 +152,13 @@ export default function App() {
         }))
     }
 
+    function handleEndOfRowIndices(indices: number[]) {
+        setGameState((prevState) => ({
+            ...prevState,
+            endOfRowIndices: indices,
+        }))
+    }
+
     function handleGameEnd() {
         setGameState((prevState) => ({
             ...prevState,
@@ -169,6 +197,8 @@ export default function App() {
                     activeWordIndex={gameState.activeWordIndex}
                     isWordMatch={gameState.isWordMatch}
                     correctWords={gameState.correctWords}
+                    onEndOfRowIndices={handleEndOfRowIndices}
+                    ref={containerRef}
                 />
                 <div id="input-row">
                     <input
