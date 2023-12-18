@@ -1,12 +1,13 @@
-import { useState, useEffect, ChangeEvent, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import useFetchWords from "./hooks/useFetchWords"
+import debounce from "./utils/debounce"
 import { shuffleWords } from "./utils/shuffleWords"
-import resetIcon from "./assets/icons/reset.svg"
-import "./App.css"
-import Timer from "./components/Timer"
-import GameSettings from "./components/GameSettings"
+import useFetchWords from "./hooks/useFetchWords"
 import MemoizedWordBox, { type WordBoxRefProps } from "./components/WordBox"
+import GameSettings from "./components/GameSettings"
+import Timer from "./components/Timer"
+import "./App.css"
+import resetIcon from "./assets/icons/reset.svg"
 
 export type CorrectWordProps = {
     index: number
@@ -81,6 +82,22 @@ export default function App() {
             }
         }
     }, [gameState.activeWordIndex, gameState.endOfRowIndices])
+
+    useEffect(() => {
+        function handleResize() {
+            if (gameState.startTimer) {
+                handleGameReset()
+            }
+        }
+
+        const debouncedResize = debounce(handleResize, 300)
+
+        window.addEventListener("resize", debouncedResize)
+
+        return () => {
+            window.removeEventListener("resize", debouncedResize)
+        }
+    }, [gameState.startTimer, handleGameReset])
 
     function handleGameReset() {
         setGameState((prevState) => ({
