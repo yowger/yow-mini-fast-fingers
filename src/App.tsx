@@ -97,6 +97,11 @@ export default function App() {
 
         if (value.endsWith(" ")) {
             handleWordCompletion(enteredWord, currentActiveWord)
+
+            setGameState((prevState) => ({
+                ...prevState,
+                isWordMatch: undefined,
+            }))
         }
     }
 
@@ -135,100 +140,19 @@ export default function App() {
         const correctWordCount = gameState.correctWords.filter(
             (word) => word.correct
         ).length
-        console.log(
-            "🚀 ~ file: App.tsx:138 ~ handleGameEnd ~ correctWordCount:",
-            correctWordCount
-        )
-        const InCorrectWordCount = gameState.correctWords.filter(
-            (word) => !word.correct
-        ).length
-        console.log(
-            "🚀 ~ file: App.tsx:141 ~ handleGameEnd ~ InCorrectWordCount:",
-            InCorrectWordCount
-        )
+        const totalWordsTyped = gameState.correctWords.length
+        const accuracy =
+            totalWordsTyped > 0
+                ? ((correctWordCount / totalWordsTyped) * 100).toFixed(2)
+                : 0
+
         const wordsPerMinute = Math.round(
             (correctWordCount * 60) / (60 - gameState.timer)
         )
-        console.log(
-            "🚀 ~ file: App.tsx:145 ~ handleGameEnd ~ wordsPerMinute:",
-            wordsPerMinute
-        )
+
+        console.log("Accuracy:", accuracy + "%")
+        console.log("Words Per Minute:", wordsPerMinute)
     }
-
-    // function handleGameEnd() {
-    //     setIsGameEnd(true)
-
-    //     const correctWordCount = correctWords.filter(
-    //         (word) => word.correct
-    //     ).length
-    //     const incorrectWords = correctWords.filter((word) => !word.correct)
-
-    //     const wordsPerMinute = Math.round(
-    //         (correctWordCount * 60) / (60 - timer)
-    //     )
-    // }
-
-    // function handleUserInput(event: ChangeEvent<HTMLInputElement>) {
-    //     const value = event.target.value
-
-    //     setIsGameEnd(false)
-    //     setStartTimer(true)
-
-    //     if (value === " ") return
-
-    //     const enteredWord = value.trim()
-    //     const currentActiveWord = words[activeWordIndex]
-    //     const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
-
-    //     if (isTypedWordMatch) {
-    //         setIsWordMatch(true)
-    //     } else {
-    //         setIsWordMatch(false)
-    //     }
-
-    //     if (value.endsWith(" ")) {
-    //         handleWordCompletion(enteredWord, currentActiveWord)
-    //     } else {
-    //         setUserInput(value)
-    //     }
-    // }
-
-    // function handleWordCompletion(
-    //     enteredWord: string,
-    //     currentActiveWord: string
-    // ) {
-    //     setCorrectWords((prevCorrectWords) => [
-    //         ...prevCorrectWords,
-    //         {
-    //             index: activeWordIndex,
-    //             correct: enteredWord === currentActiveWord,
-    //         },
-    //     ])
-
-    //     setActiveWordIndex((prevIndex) => prevIndex + 1)
-    //     setUserInput("")
-    // }
-
-    // function handleGameReset() {
-    //     setWords((prevWords) => shuffleWords(prevWords))
-    //     setActiveWordIndex(0)
-    //     setCorrectWords([])
-    //     setIsWordMatch(undefined)
-
-    //     setUserInput("")
-    //     inputRef?.current?.focus()
-
-    //     setTimer(duration)
-    //     setStartTimer(false)
-
-    //     setIsGameEnd(false)
-    // }
-
-    // function handleGameDuration() {
-    //     const newDuration = duration === 60 ? 30 : 60
-
-    //     setDuration(newDuration)
-    // }
 
     return (
         <div id="root">

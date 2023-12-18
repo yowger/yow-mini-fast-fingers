@@ -1,11 +1,11 @@
-import { type correctWordProps } from "../App"
+import { type CorrectWordProps } from "../App"
 import MemoizedWordDisplay from "./WordDisplay"
 
 type WordBoxProps = {
     words: string[]
     activeWordIndex: number
     isWordMatch: boolean | undefined
-    correctWords: correctWordProps[]
+    correctWords: CorrectWordProps[]
 }
 
 export default function WordBox({

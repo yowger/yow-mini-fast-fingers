@@ -1,12 +1,12 @@
 import { memo } from "react"
-import { correctWordProps } from "../App"
+import { CorrectWordProps } from "../App"
 
 type WordDisplayProps = {
     index: number
     word: string
     isActive: boolean
     isWordMatch: boolean | undefined
-    correctWords: correctWordProps[]
+    correctWords: CorrectWordProps[]
 }
 
 const MemoizedWordDisplay = memo(function WordDisplay({
