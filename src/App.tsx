@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { type ChangeEvent, useEffect, useRef, useState } from "react"
 
 import debounce from "./utils/debounce"
 import { shuffleWords } from "./utils/shuffleWords"
@@ -97,7 +97,9 @@ export default function App() {
         return () => {
             window.removeEventListener("resize", debouncedResize)
         }
-    }, [gameState.startTimer, handleGameReset])
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [gameState.startTimer])
 
     function handleGameReset() {
         setGameState((prevState) => ({
