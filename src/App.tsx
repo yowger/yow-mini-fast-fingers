@@ -61,6 +61,8 @@ export default function App() {
 
     useEffect(() => {
         handleGameReset()
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameState.duration])
 
     useEffect(() => {
@@ -92,6 +94,9 @@ export default function App() {
             startTimer: false,
             isGameEnd: false,
         }))
+
+        resetContainerTopPosition()
+
         inputRef?.current?.focus()
     }
 
@@ -157,6 +162,13 @@ export default function App() {
             ...prevState,
             endOfRowIndices: indices,
         }))
+    }
+
+    function resetContainerTopPosition() {
+        const containerRowNode = containerRef?.current?.getContainerRowRef()
+        if (containerRowNode) {
+            containerRowNode.style.top = "0"
+        }
     }
 
     function handleGameEnd() {
