@@ -36,6 +36,9 @@ body {
 .input:focus {
     outline: 2px solid var(--blue-1);
 }
+.input:disabled {
+    cursor: not-allowed;
+}
 
 .button {
     background-color: var(--primary);
