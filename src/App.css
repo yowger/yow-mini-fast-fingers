@@ -112,7 +112,7 @@
     font-size: 1rem;
 }
 #game-score .result-list li {
-    padding: 0.6rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     justify-content: space-between;
     display: flex;
 }
