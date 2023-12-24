@@ -224,7 +224,7 @@ export default function App() {
     const scores = useMemo(
         () => gameState.scores,
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [gameState.isGameEnd]
+        [gameState.duration, gameState.isGameEnd]
     )
 
     function resetContainerTopPosition() {
@@ -307,8 +307,12 @@ export default function App() {
                 </div>
                 <MemoizedGameScore
                     scores={scores}
+                    duration={gameState.duration}
                     isGameEnd={gameState.isGameEnd}
                 />
+                {/* weekly leader board */}
+                <div></div>
+                {/* all time high */}
             </div>
         </div>
     )

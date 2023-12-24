@@ -11,11 +11,13 @@ type Scores = {
 
 type GameScoreProps = {
     scores: Scores
+    duration: number
     isGameEnd: boolean
 }
 
 const MemoizedGameScore = memo(function GameScore({
     scores,
+    duration,
     isGameEnd,
 }: GameScoreProps) {
     return (
@@ -78,6 +80,10 @@ const MemoizedGameScore = memo(function GameScore({
                                     "-"
                                 )}
                             </span>
+                        </li>
+                        <li>
+                            <span>Duration</span>
+                            <span>{duration}</span>
                         </li>
                     </ul>
                 </div>
