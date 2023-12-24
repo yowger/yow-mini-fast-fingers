@@ -244,9 +244,17 @@ export default function App() {
             totalWordsTyped > 0
                 ? +((correctWordCount / totalWordsTyped) * 100).toFixed(2)
                 : 0
+
+        const totalKeystrokes = correctKeyStrokes + incorrectKeyStrokes
+        const totalKeystrokeTyped = Math.round(totalKeystrokes / 5)
         const wordsPerMinute = Math.round(
-            (correctWordCount * 60) / (60 - gameState.timer)
+            (totalKeystrokeTyped * 60) / (60 - gameState.timer)
         )
+
+        // old formula
+        // const wordsPerMinute = Math.round(
+        //     (correctWordCount * 60) / (60 - gameState.timer)
+        // )
 
         setGameState((prevState) => ({
             ...prevState,
@@ -261,7 +269,6 @@ export default function App() {
                 wordsPerMinute,
             },
         }))
-
     }
 
     return (
@@ -298,7 +305,10 @@ export default function App() {
                         </div>
                     </button>
                 </div>
-                <MemoizedGameScore scores={scores} isGameEnd={gameState.isGameEnd} />
+                <MemoizedGameScore
+                    scores={scores}
+                    isGameEnd={gameState.isGameEnd}
+                />
             </div>
         </div>
     )
