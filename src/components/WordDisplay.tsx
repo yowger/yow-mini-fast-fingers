@@ -1,4 +1,5 @@
 import { memo } from "react"
+
 import { CorrectWordProps } from "../App"
 
 type WordDisplayProps = {

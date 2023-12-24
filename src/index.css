@@ -73,3 +73,19 @@ body {
 .button:hover .button-icon {
     transform: rotate(90deg);
 }
+
+.bold {
+    font-weight: 500;
+}
+
+.success {
+    color: var(--success-1);
+}
+
+.danger {
+    color: var(--danger-1);
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}

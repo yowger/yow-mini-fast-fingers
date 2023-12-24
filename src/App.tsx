@@ -1,13 +1,21 @@
-import { type ChangeEvent, useEffect, useRef, useState } from "react"
+import {
+    type ChangeEvent,
+    useEffect,
+    useRef,
+    useState,
+    useCallback,
+    useMemo,
+} from "react"
 
 import debounce from "./utils/debounce"
 import { shuffleWords } from "./utils/shuffleWords"
 import useFetchWords from "./hooks/useFetchWords"
 import MemoizedWordBox, { type WordBoxRefProps } from "./components/WordBox"
-import GameSettings from "./components/GameSettings"
+import MemoizedGameSettings from "./components/GameSettings"
 import Timer from "./components/Timer"
 import "./App.css"
 import resetIcon from "./assets/icons/reset.svg"
+import MemoizedGameScore from "./components/GameScore"
 
 export type CorrectWordProps = {
     index: number
@@ -20,6 +28,8 @@ export default function App() {
     const fetchedWords = useFetchWords(wordsUrl)
     const inputRef = useRef<HTMLInputElement | null>(null)
     const containerRef = useRef<WordBoxRefProps>(null)
+    const [correctKeyStrokes, setCorrectKeyStrokes] = useState(0)
+    const [incorrectKeyStrokes, setIncorrectKeyStrokes] = useState(0)
 
     const [gameState, setGameState] = useState({
         words: [] as string[],
@@ -32,6 +42,14 @@ export default function App() {
         startTimer: false,
         isGameEnd: false,
         endOfRowIndices: [] as number[],
+        scores: {
+            correctWordCount: 0,
+            incorrectWordCount: 0,
+            correctKeyStrokes: 0,
+            incorrectKeyStrokes: 0,
+            accuracy: 0,
+            wordsPerMinute: 0,
+        },
     })
 
     useEffect(() => {
@@ -112,6 +130,14 @@ export default function App() {
             timer: prevState.duration,
             startTimer: false,
             isGameEnd: false,
+            scores: {
+                correctWordCount: 0,
+                incorrectWordCount: 0,
+                correctKeyStrokes: 0,
+                incorrectKeyStrokes: 0,
+                accuracy: 0,
+                wordsPerMinute: 0,
+            },
         }))
 
         resetContainerTopPosition()
@@ -135,6 +161,10 @@ export default function App() {
         const currentActiveWord = gameState.words[gameState.activeWordIndex]
         const isTypedWordMatch = currentActiveWord.startsWith(enteredWord)
 
+        if (!isTypedWordMatch && !value.includes(" ")) {
+            setIncorrectKeyStrokes((prevCount) => prevCount + 1)
+        }
+
         setGameState((prevState) => ({
             ...prevState,
             isWordMatch: isTypedWordMatch,
@@ -146,7 +176,15 @@ export default function App() {
             setGameState((prevState) => ({
                 ...prevState,
                 isWordMatch: undefined,
+                scores: {
+                    ...prevState.scores,
+                    correctKeyStrokes:
+                        prevState.scores.correctKeyStrokes + correctKeyStrokes,
+                },
             }))
+
+            const correctKeyStrokes = isTypedWordMatch ? enteredWord.length : 0
+            setCorrectKeyStrokes((prevCount) => prevCount + correctKeyStrokes)
         }
     }
 
@@ -168,13 +206,13 @@ export default function App() {
         }))
     }
 
-    function handleGameDuration() {
+    const handleChangeGameDuration = useCallback(() => {
         const newDuration = gameState.duration === 60 ? 30 : 60
         setGameState((prevState) => ({
             ...prevState,
             duration: newDuration,
         }))
-    }
+    }, [gameState.duration])
 
     function handleEndOfRowIndices(indices: number[]) {
         setGameState((prevState) => ({
@@ -182,6 +220,12 @@ export default function App() {
             endOfRowIndices: indices,
         }))
     }
+
+    const scores = useMemo(
+        () => gameState.scores,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [gameState.isGameEnd]
+    )
 
     function resetContainerTopPosition() {
         const containerRowNode = containerRef?.current?.getContainerRowRef()
@@ -191,26 +235,33 @@ export default function App() {
     }
 
     function handleGameEnd() {
-        setGameState((prevState) => ({
-            ...prevState,
-            isGameEnd: true,
-        }))
-
         const correctWordCount = gameState.correctWords.filter(
             (word) => word.correct
         ).length
         const totalWordsTyped = gameState.correctWords.length
-        const accuracy =
+        const incorrectWordCount = totalWordsTyped - correctWordCount
+        const accuracy: number =
             totalWordsTyped > 0
-                ? ((correctWordCount / totalWordsTyped) * 100).toFixed(2)
+                ? +((correctWordCount / totalWordsTyped) * 100).toFixed(2)
                 : 0
-
         const wordsPerMinute = Math.round(
             (correctWordCount * 60) / (60 - gameState.timer)
         )
 
-        console.log("Accuracy:", accuracy + "%")
-        console.log("Words Per Minute:", wordsPerMinute)
+        setGameState((prevState) => ({
+            ...prevState,
+            isGameEnd: true,
+            scores: {
+                ...prevState.scores,
+                correctWordCount,
+                incorrectWordCount,
+                correctKeyStrokes,
+                incorrectKeyStrokes,
+                accuracy,
+                wordsPerMinute,
+            },
+        }))
+
     }
 
     return (
@@ -219,9 +270,9 @@ export default function App() {
                 <div id="header">
                     <h1>Fast Fingers</h1>
                 </div>
-                <GameSettings
+                <MemoizedGameSettings
                     duration={gameState.duration}
-                    onChangeGameDuration={handleGameDuration}
+                    onChangeGameDuration={handleChangeGameDuration}
                 />
                 <MemoizedWordBox
                     words={gameState.words}
@@ -247,6 +298,7 @@ export default function App() {
                         </div>
                     </button>
                 </div>
+                <MemoizedGameScore scores={scores} isGameEnd={gameState.isGameEnd} />
             </div>
         </div>
     )

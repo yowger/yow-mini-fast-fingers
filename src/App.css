@@ -71,6 +71,7 @@
     align-items: center;
     padding-inline: 1.75rem;
     width: 7.125rem;
+    border-radius: 4px;
 }
 #timer span {
     font-size: 1.375rem;
@@ -81,4 +82,51 @@
     justify-content: center;
     gap: 1.15rem;
     margin-top: 1.15rem;
+}
+
+#game-score-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+#game-score {
+    background-color: var(--primary);
+    width: 320px;
+    border-radius: 4px;
+}
+#game-score div.header {
+    font-size: 1.25rem;
+    text-align: center;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+#game-score div.header p {
+    font-weight: 500;
+}
+#game-score div.header .wpm {
+    font-size: 2rem;
+    margin-right: 0.2rem;
+    font-weight: 600;
+}
+#game-score .result-list {
+    font-size: 1rem;
+}
+#game-score .result-list li {
+    padding: 0.6rem 1.25rem;
+    justify-content: space-between;
+    display: flex;
+}
+#game-score .result-list li:nth-child(odd) {
+    background-color: var(--grey-1);
+}
+#game-score .keystroke {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+#game-score .keystroke .total {
+    margin-left: 1rem;
+}
+#game-score .keystroke .slash {
+    font-size: 0.825rem;
 }
