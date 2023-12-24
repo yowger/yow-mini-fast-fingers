@@ -97,8 +97,8 @@
 #game-score div.header {
     font-size: 1.25rem;
     text-align: center;
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
+    padding-top: 1.15rem;
+    padding-bottom: 1.15rem;
 }
 #game-score div.header p {
     font-weight: 500;
