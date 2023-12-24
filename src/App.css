@@ -87,10 +87,9 @@
 #game-score-container {
     display: flex;
     justify-content: center;
-    margin-top: 4rem;
+    margin-top: 3rem;
 }
 #game-score {
-    background-color: var(--primary);
     width: 320px;
     border-radius: 4px;
 }
@@ -117,7 +116,7 @@
     display: flex;
 }
 #game-score .result-list li:nth-child(odd) {
-    background-color: var(--grey-1);
+    background-color: var(--primary);
 }
 #game-score .keystroke {
     display: flex;
