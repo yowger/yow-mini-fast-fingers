@@ -16,6 +16,9 @@ import Timer from "./components/Timer"
 import "./App.css"
 import resetIcon from "./assets/icons/reset.svg"
 import MemoizedGameScore from "./components/GameScore"
+import MemoizedHighScore from "./components/HighScore"
+import useScores from "./hooks/useScores"
+import { randomUsername } from "./utils/randomUsername"
 
 export type CorrectWordProps = {
     index: number
@@ -30,6 +33,7 @@ export default function App() {
     const containerRef = useRef<WordBoxRefProps>(null)
     const [correctKeyStrokes, setCorrectKeyStrokes] = useState(0)
     const [incorrectKeyStrokes, setIncorrectKeyStrokes] = useState(0)
+    const [username, setUsername] = useState("")
 
     const [gameState, setGameState] = useState({
         words: [] as string[],
@@ -51,6 +55,20 @@ export default function App() {
             wordsPerMinute: 0,
         },
     })
+
+    const { scores: fetchedScores, loading } = useScores()
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem("username")
+
+        if (storedUsername) {
+            setUsername(storedUsername)
+        } else if (!username) {
+            const newUsername = randomUsername()
+            setUsername(newUsername)
+            localStorage.setItem("username", newUsername)
+        }
+    }, [])
 
     useEffect(() => {
         if (fetchedWords && fetchedWords.length > 0) {
@@ -118,6 +136,26 @@ export default function App() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameState.startTimer])
+
+    const handleOnChangeUsername = () => {
+        let username = window.prompt(
+            "Please choose a username (maximum 18 characters)"
+        )
+
+        if (username === "") return
+
+        if (username !== null) {
+            username = username.trim()
+
+            if (username.length > 18) {
+                username = username.slice(0, 18)
+            }
+
+            setUsername(username)
+
+            localStorage.setItem("username", username)
+        }
+    }
 
     function handleGameReset() {
         setGameState((prevState) => ({
@@ -280,6 +318,8 @@ export default function App() {
                 <MemoizedGameSettings
                     duration={gameState.duration}
                     onChangeGameDuration={handleChangeGameDuration}
+                    username={username}
+                    onChangeUsername={handleOnChangeUsername}
                 />
                 <MemoizedWordBox
                     words={gameState.words}
@@ -310,8 +350,7 @@ export default function App() {
                     duration={gameState.duration}
                     isGameEnd={gameState.isGameEnd}
                 />
-                {/* weekly leader board */}
-                <div></div>
+                {loading ? "..." : <MemoizedHighScore scores={fetchedScores} />}
                 {/* all time high */}
             </div>
         </div>

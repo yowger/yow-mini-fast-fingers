@@ -73,6 +73,9 @@ body {
 .button:hover .button-icon {
     transform: rotate(90deg);
 }
+.button:disabled {
+    cursor: not-allowed;
+}
 
 .bold {
     font-weight: 500;
@@ -88,4 +91,22 @@ body {
 
 .text-sm {
     font-size: 0.875rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    text-align: left;
+}
+
+.table thead th,
+.table tbody td {
+    padding: 0.75rem 1.25rem;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: var(--primary);
 }

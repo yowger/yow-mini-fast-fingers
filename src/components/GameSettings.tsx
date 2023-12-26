@@ -1,19 +1,28 @@
 import { memo } from "react"
 
 type gameSettingsProps = {
-    onChangeGameDuration: () => void
     duration: number
+    onChangeGameDuration: () => void
+    username: string
+    onChangeUsername: () => void
 }
 
 const MemoizedGameSettings = memo(function GameSettings({
-    onChangeGameDuration,
     duration,
+    onChangeGameDuration,
+    username,
+    onChangeUsername,
 }: gameSettingsProps) {
     return (
         <div id="game-settings">
             <button className="button button-sm" onClick={onChangeGameDuration}>
                 Duration: {duration}s
             </button>
+            {username && (
+                <button className="button button-sm" onClick={onChangeUsername}>
+                    {username}
+                </button>
+            )}
         </div>
     )
 })
