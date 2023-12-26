@@ -30,7 +30,7 @@ export default function useGetScores(): {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("https://yow-fast-fingers.onrender.com?limit=15")
+                const response = await fetch("https://yow-fast-fingers.onrender.com/score?limit=15")
                 if (!response.ok) {
                     throw new Error("Network response was not ok.")
                 }
