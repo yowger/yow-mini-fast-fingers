@@ -17,8 +17,9 @@ import "./App.css"
 import resetIcon from "./assets/icons/reset.svg"
 import MemoizedGameScore from "./components/GameScore"
 import MemoizedHighScore from "./components/HighScore"
-import useScores from "./hooks/useScores"
+import useGetScores from "./hooks/useGetScores"
 import { randomUsername } from "./utils/randomUsername"
+import usePostScore, { type Score } from "./hooks/usePostScore"
 
 export type CorrectWordProps = {
     index: number
@@ -56,7 +57,8 @@ export default function App() {
         },
     })
 
-    const { scores: fetchedScores, loading } = useScores()
+    const { scores: getScores, loading } = useGetScores()
+    const { postScore } = usePostScore()
 
     useEffect(() => {
         const storedUsername = localStorage.getItem("username")
@@ -293,6 +295,35 @@ export default function App() {
         // const wordsPerMinute = Math.round(
         //     (correctWordCount * 60) / (60 - gameState.timer)
         // )
+        /*
+        username: string
+    wpm: number
+    accuracy: number
+    correctTypedWords: number
+    incorrectTypedWords: number
+    correctKeyStrokes: number
+    incorrectKeyStrokes: number
+    duration: number
+    */
+
+        const scoreData: Score = {
+            username,
+            wpm: wordsPerMinute,
+            accuracy: accuracy,
+            correctTypedWords: correctWordCount,
+            incorrectTypedWords: incorrectWordCount,
+            correctKeyStrokes: correctKeyStrokes,
+            incorrectKeyStrokes: incorrectKeyStrokes,
+            duration: gameState.duration,
+        }
+
+        postScore(scoreData)
+            .then(() => {
+                console.log("Score posted successfully!")
+            })
+            .catch((error) => {
+                console.error("Failed to post score:", error)
+            })
 
         setGameState((prevState) => ({
             ...prevState,
@@ -350,7 +381,7 @@ export default function App() {
                     duration={gameState.duration}
                     isGameEnd={gameState.isGameEnd}
                 />
-                {loading ? "..." : <MemoizedHighScore scores={fetchedScores} />}
+                {loading ? "..." : <MemoizedHighScore scores={getScores} />}
                 {/* all time high */}
             </div>
         </div>

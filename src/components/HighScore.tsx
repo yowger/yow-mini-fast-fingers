@@ -1,6 +1,6 @@
 import { memo } from "react"
 
-import { Score } from "../hooks/useScores"
+import { Score } from "../hooks/useGetScores"
 import { timeAgo } from "../utils/timeAgo"
 
 type HighScoreProps = {

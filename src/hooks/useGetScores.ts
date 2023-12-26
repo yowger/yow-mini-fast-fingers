@@ -18,7 +18,7 @@ type ScoresResponse = {
     scores: Score[]
 }
 
-function useScores(): {
+export default function useGetScores(): {
     scores: Score[] | null
     loading: boolean
     error: Error | null
@@ -30,13 +30,14 @@ function useScores(): {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:5002/score")
+                const response = await fetch("http://localhost:5002/score?limit=15")
                 if (!response.ok) {
                     throw new Error("Network response was not ok.")
                 }
                 const data: ScoresResponse = await response.json()
                 setScores(data.scores)
             } catch (error: unknown) {
+                console.log("🚀 ~ file: useGetScores.ts:40 ~ fetchData ~ error:", error)
                 if (error instanceof Error) {
                     setError(error)
                 }
@@ -50,5 +51,3 @@ function useScores(): {
 
     return { scores, loading, error }
 }
-
-export default useScores
