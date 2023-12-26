@@ -26,7 +26,7 @@ function usePostScore(): {
     const postScore = async (scoreData: Score) => {
         setLoading(true)
         try {
-            const response = await fetch("http://localhost:5002/score", {
+            const response = await fetch("https://yow-fast-fingers.onrender.com/score", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
