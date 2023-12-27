@@ -34,7 +34,7 @@ https://github.com/yowger/yow-mini-fast-fingers/assets/106136772/7653e9ae-0502-4
 - Displays recent scores of all users.
 
 ## Getting Started
-1. Clone the repository: `git clone [<repository_url>](https://github.com/yowger/yow-mini-fast-fingers.git)`
+1. Clone the repository: `git clone https://github.com/yowger/yow-mini-fast-fingers.git`
 2. Install dependencies: `npm install`
 3. Run the application: `npm run dev`
 
