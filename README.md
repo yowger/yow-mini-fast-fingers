@@ -7,7 +7,6 @@ A simple react typing test game that calculates your words per minute. Besides R
 
 ### 1. Word Bank
 - A collection of words available for users to type.
-- Varying difficulty levels to cater to different skill levels.
 
 ### 2. Typing Area
 - An input field where users type the displayed words from the Word Bank.
@@ -15,6 +14,7 @@ A simple react typing test game that calculates your words per minute. Besides R
 ### 3. Timer
 - Tracks the duration of the typing test.
 - Used to calculate Words Per Minute (WPM).
+- switch between 30s and 60s timer
 
 ### 4. Accuracy Calculation
 - Evaluates user accuracy by comparing typed input to the correct words.
@@ -23,6 +23,7 @@ A simple react typing test game that calculates your words per minute. Besides R
 - Calculates and displays user scores based on various metrics:
   - WPM (Words Per Minute)
   - Accuracy percentage
+  - Correct/incorrect typed words
   - Correct/incorrect keystrokes
   
 ### 6. Leaderboard
