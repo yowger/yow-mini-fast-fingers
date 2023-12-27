@@ -1,30 +1,42 @@
-# React + TypeScript + Vite
+# Fast Fingers
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+A simple react typing test game that calculates your words per minute. Besides React, no libraries were used in this app, I wanted a challenge.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Word Bank
+- A collection of words available for users to type.
+- Varying difficulty levels to cater to different skill levels.
 
-## Expanding the ESLint configuration
+### 2. Typing Area
+- An input field where users type the displayed words from the Word Bank.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 3. Timer
+- Tracks the duration of the typing test.
+- Used to calculate Words Per Minute (WPM).
 
-- Configure the top-level `parserOptions` property like this:
+### 4. Accuracy Calculation
+- Evaluates user accuracy by comparing typed input to the correct words.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### 5. Scoring System
+- Calculates and displays user scores based on various metrics:
+  - WPM (Words Per Minute)
+  - Accuracy percentage
+  - Correct/incorrect keystrokes
+  
+### 6. Leaderboard
+- Displays recent scores of all users.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Getting Started
+1. Clone the repository: `git clone [<repository_url>](https://github.com/yowger/yow-mini-fast-fingers.git)`
+2. Install dependencies: `npm install`
+3. Run the application: `npm run dev`
+
+## Backend code
+https://github.com/yowger/yow-mini-fast-fingers
+
+## Demo
+
+https://github.com/yowger/yow-mini-fast-fingers/assets/106136772/7653e9ae-0502-437d-b779-450e8ca64a5c
+
