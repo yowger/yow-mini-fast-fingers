@@ -35,7 +35,7 @@ A simple react typing test game that calculates your words per minute. Besides R
 3. Run the application: `npm run dev`
 
 ## Backend code
-https://github.com/yowger/yow-mini-fast-fingers
+[https://github.com/yowger/yow-mini-fast-fingers](https://github.com/yowger/yow-mini-fast-fingers-server)
 
 ## Demo
 
