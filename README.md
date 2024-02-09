@@ -1,7 +1,7 @@
 # Fast Fingers
 
 ## Live website
-yow-mini-fast-fingers.vercel.app
+yow-mini-fast-fingers.vercel(yow-mini-fast-fingers.vercel.app)
 
 ## Description
 A simple react typing test game that calculates your words per minute. Besides React, no libraries were used in this app, I wanted a challenge.
